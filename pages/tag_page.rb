@@ -44,7 +44,7 @@ module Pages
       [
         search_and_select_value(tag),
         scroll_to_element(publications(action))
-      ].each { |act| ordinary_behaviour_people(act) }
+      ].each { |act| ordinary_user_behaviour(act) }
 
       posts = select_multiple_posts(RECENT_POSTS)
       puts "Get 3 posts #{posts}"; posts

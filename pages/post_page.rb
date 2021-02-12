@@ -26,26 +26,31 @@ module Pages
       find(:xpath, @profile_user_link)['href']
     end
 
+    def profile_closed?
+      page.has_text?('Это закрытый аккаунт')
+    end
+
     def subscribed?
       page.has_xpath?("//button[contains(text(), '#{@subscribes}')]")
     end
 
-    def profil_closed?
-      page.has_text?('Это закрытый аккаунт')
+    def subscribe
+      click_button(@subscribe)
+      puts @subscription_completed
+
+      3.times do |second|
+        sleep second
+        next if subscribed?
+
+        find(:xpath, @subscribe).click; sleep second
+      end
     end
 
-    def subscribe
+    def subscribe_action
+      return 'Profile closed' if profile_closed?
+
       unless subscribed?
-        click_button(@subscribe)
-        puts @subscription_completed
-
-        3.times do |second|
-          sleep second
-          next if subscribed?
-
-          find(:xpath, @subscribe).click; sleep second
-        end
-
+        subscribe
         self.subscribe_users += 1
       end
 
@@ -54,9 +59,9 @@ module Pages
 
     def subscribe_and_move_to_user_page
       [
-        subscribe,
+        subscribe_action,
         visit_to(profile_user_link)
-      ].each { |act| ordinary_behaviour_people(act) }
+      ].each { |act| ordinary_user_behaviour(act) }
     end
 
     def last_recent_post_users
@@ -67,7 +72,7 @@ module Pages
       puts "Get 3 photos #{last_recent_post_users}"
       last_recent_post_users.each do |link|
         visit_to(link)
-        ordinary_behaviour_people(set_like)
+        ordinary_user_behaviour(set_like)
       end
     end
 

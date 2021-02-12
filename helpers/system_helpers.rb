@@ -3,39 +3,12 @@
 require_relative '../spec_helper'
 require 'yaml'
 
-SPEED_OF_USER_MOUSE = rand(0.5..0.8)
-
 module Helpers
   include Capybara::DSL
-
-  def mouse_move
-    Mouse.move_to [
-      rand(100..800),
-      rand(100..800)
-    ], SPEED_OF_USER_MOUSE
-  end
-
-  def scroll_down
-    page.execute_script "window.scrollTo(0, #{rand(100..800)})"; sleep 3
-  end
-
-  def scroll_up
-    page.execute_script 'window.scrollTo(0, -10000)'; sleep 3
-  end
-
-  def scroll_to_element(element, position = :top)
-    scroll_to(element, align: position)
-  end
-
-  def move_scroll_and_return_top
-    count_scrolls = rand(1..5)
-    count_scrolls.times { scroll_down; mouse_move }; scroll_up
-  end
-
   def search_and_select_value(name)
     puts "Search -> #{name}"
 
-    fill_in('Поиск', with: name); sleep 3
+    fill_in('Поиск', with: name); slow_waiting
     all(:xpath, '//span[contains(@aria-label, "Хэштег")]').first.click
 
     WaitUtil.wait_for_condition(
@@ -54,11 +27,43 @@ module Helpers
     visit link
   end
 
-  def ordinary_behaviour_people(method)
-    sleep 3
-    move_scroll_and_return_top
-    method
-    sleep 3
+  def ordinary_user_behaviour(method)
+    scroll_page; slow_waiting_method(method)
+  end
+
+  def slow_waiting
+    sleep 5
+  end
+
+  def slow_waiting_method(method)
+    slow_waiting; method; slow_waiting
+  end
+
+  def scroll_page
+    smooth_scrolling_down
+    scroll_page_to(:up)
+  end
+
+  def smooth_scrolling_down
+    puts 'Smooth scrolling down'
+
+    slow_waiting_method(
+      0.step(5_000, 20) { |v| page.execute_script "window.scrollTo(0, #{v})"; sleep 0.00001 }
+    )
+  end
+
+  def scroll_page_to(action)
+    puts "Scroll to #{action.to_s} page"
+
+    value = { up: -10_000, down: 10_000 }[action]
+
+    slow_waiting_method(
+      page.execute_script "window.scrollTo(0, #{value})"
+    )
+  end
+
+  def scroll_to_element(element, position = :top)
+    scroll_to(element, align: position)
   end
 
   def blocked_action_on_page?
