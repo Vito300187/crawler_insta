@@ -55,12 +55,6 @@ Capybara.configure do |config|
   config.app_host = 'https://www.instagram.com'
 end
 
-Capybara.configure do |config|
-  
-  config.default_max_wait_time = 10
-end
-
-
 RSpec.configure do |config|
   config.before(:suite) do
     separate; time('Start'); separate
