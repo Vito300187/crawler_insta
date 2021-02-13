@@ -24,7 +24,7 @@ def separate
 end
 
 def time(p)
-  puts "#{p} script #{Time.now.strftime('%d-%M-%Y %H:%M')}"
+  puts "#{p} script #{Time.now.strftime('%d-%m-%Y %H:%M')}"
 end
 
 Capybara.register_driver :remote_chrome do |app|
