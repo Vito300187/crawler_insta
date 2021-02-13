@@ -19,7 +19,7 @@ module Helpers
   end
 
   def visit_home_page
-    visit 'https://www.instagram.com'
+    visit('/')
   end
 
   def visit_to(link)
