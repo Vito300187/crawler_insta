@@ -65,10 +65,15 @@ module Pages
     end
 
     def last_recent_post_users
-      all(:xpath, @photos_on_page).first(RECENT_POSTS).map { |h| h['href'] }
+      all(:xpath, @photos_on_page)
+        .first(RECENT_POSTS)
+        .map { |h| h['href'] }
+        .compact
     end
 
     def like_on_last_photos
+      return if last_recent_post_users.empty?
+
       puts "Get 3 photos #{last_recent_post_users}"
       last_recent_post_users.each do |link|
         visit_to(link)

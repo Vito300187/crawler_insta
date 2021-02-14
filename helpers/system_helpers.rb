@@ -48,7 +48,10 @@ module Helpers
     puts 'Smooth scrolling down'
 
     slow_waiting_method(
-      0.step(5_000, 20) { |v| page.execute_script "window.scrollTo(0, #{v})"; sleep 0.00001 }
+      0.step(2_000, 20) do |v|
+        page.execute_script "window.scrollTo(0, #{v})"
+        sleep 0.0001
+      end
     )
   end
 

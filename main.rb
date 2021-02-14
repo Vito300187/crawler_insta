@@ -21,6 +21,6 @@ feature 'Test' do
 Кол-во подписок -> #{post_page.subscribe_users};\
 Кол-во лайков -> #{post_page.count_likes}"
 
-    write_report('report.txt', info)
+    write_report('report.txt', info) if ENV['REPORT']
   end
 end
