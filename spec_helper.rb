@@ -27,11 +27,23 @@ def time(p)
   puts "#{p} script #{Time.now.strftime('%d-%m-%Y %H:%M')}"
 end
 
+def record_video?
+  ENV['RECORD_VIDEO'].nil? ? false : true
+end
+
+def browser_version
+  `chromedriver -v`
+    .split(' ')
+    .reject { |a| a.include?('Chrome') }[0]
+    .to_f
+end
+
 Capybara.register_driver :remote_chrome do |app|
   caps = Selenium::WebDriver::Remote::Capabilities.chrome
   caps[:browser_name] = 'chrome'
-  caps[:version] = '88.0'
+  caps[:version] = browser_version
   caps['enableVNC'] = true
+  caps['enableVideo'] = record_video?
   opts = {
     browser: :remote,
     url: 'http://localhost:4444/wd/hub',

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'spec_helper'
-RECENT_POSTS = 3
+RECENT_POSTS = rand(1..3)
 
 feature 'Test' do
   let(:home_page) { Pages::HomePage.new }
