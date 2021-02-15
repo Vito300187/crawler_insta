@@ -56,9 +56,11 @@ Capybara.configure do |config|
   if ENV['HEADLESS']
     config.default_driver = :selenium_chrome_headless
     config.javascript_driver = :selenium_chrome_headless
+
   elsif ENV['SELEN']
     config.default_driver = :remote_chrome
     config.javascript_driver = :remote_chrome
+
   else
     config.default_driver = :selenium_chrome
     config.javascript_driver = :selenium_chrome
